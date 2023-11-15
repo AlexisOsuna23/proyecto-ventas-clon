@@ -21,6 +21,7 @@ namespace proyecto_ventas
         {
             InitializeComponent();
             this.Sqlclass = new SQLServerClass();
+
         }
 
         private void DGVVD_CellContentClick(object sender, DataGridViewCellEventArgs e)

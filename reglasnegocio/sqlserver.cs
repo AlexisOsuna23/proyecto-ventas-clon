@@ -39,7 +39,7 @@ namespace reglasnegocio
             }
             public string ConexionEstatica()
             {
-                string SSQL = "ALEXIS";
+                string SSQL = "DESKTOP-69LGQB4\\SQLEXPRESS01";
                 string INT = "CRUD_Productos";
                 string USQL = "sa";
                 string CSQL = "12345";
@@ -86,7 +86,7 @@ namespace reglasnegocio
                     {
                         conn.Open();
 
-                        string SQLQuery = $" SELECT * FROM VD ";
+                        string SQLQuery = $" SELECT * FROM VentasDetalle ";
 
                         using (SqlDataAdapter DDA = new SqlDataAdapter(SQLQuery, conn))
                         {

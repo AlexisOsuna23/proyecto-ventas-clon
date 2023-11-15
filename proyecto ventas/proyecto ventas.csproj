@@ -36,6 +36,9 @@
     <Reference Include="reglasnegocio">
       <HintPath>..\reglasnegocio\bin\Debug\reglasnegocio.dll</HintPath>
     </Reference>
+    <Reference Include="RelgasdeNegocioSQLSERVER">
+      <HintPath>..\..\dev\dlgProyecto\RelgasdeNegocioSQLSERVER\bin\Debug\RelgasdeNegocioSQLSERVER.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
