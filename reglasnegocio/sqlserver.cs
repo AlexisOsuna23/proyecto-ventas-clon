@@ -172,7 +172,10 @@ namespace reglasnegocio
                         conn.Open();
 
                         string insertQuery = $"INSERT INTO Productos(ProductoID, Descripcion, Pventa, Saldo) " +
-                                             $"VALUES ('{ProductoID}', '{Descripcion}', '{PrecioVenta}', '{saldo}')";
+                                            $"VALUES ('{ProductoID}', '{Descripcion}', '{PrecioVenta}', '{saldo}')";
+
+                        //string EXEC = $"INSERT INTO Productos(ProductoID, Descripcion, Pventa, Saldo) " +
+                          //                   $"VALUES ('{ProductoID}', '{Descripcion}', '{PrecioVenta}', '{saldo}')"; 
 
                         SqlCommand command = new SqlCommand(insertQuery, conn);
                         command.ExecuteNonQuery();
