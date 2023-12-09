@@ -291,7 +291,7 @@ namespace reglasnegocio
                             {
                                 cmdDetalle.Transaction = sqlTransaction;
 
-                                cmdDetalle.CommandText = "DELETE FROM VentasDetalle WHERE Folio = @Folio";
+                                cmdDetalle.CommandText = "DELETE FROM InventarioDetalle WHERE Folio = @Folio";
                                 cmdDetalle.Parameters.AddWithValue("@Folio", ultimoFolio);
                                 cmdDetalle.ExecuteNonQuery();
                             }
