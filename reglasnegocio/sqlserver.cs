@@ -197,7 +197,7 @@ namespace reglasnegocio
                                 {
                                     VD.Transaction = sqlTransaction;
 
-                                    VD.CommandText = "INSERT INTO VentasDetalle (Cantidad, Pventa, ProductoID, Folio) VALUES (@Cantidad, @Pventa, @ProductoID, @Folio)";
+                                    VD.CommandText = "INSERT INTO InventarioDetalle (Cantidad, Pventa, ProductoID, Folio) VALUES (@Cantidad, @Pventa, @ProductoID, @Folio)";
                                     VD.Parameters.AddWithValue("@Cantidad", cantidades[i]);
                                     VD.Parameters.AddWithValue("@Pventa", pVentas[i]);
                                     VD.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
