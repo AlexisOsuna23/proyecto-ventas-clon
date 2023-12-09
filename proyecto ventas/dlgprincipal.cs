@@ -74,7 +74,34 @@ namespace proyecto_ventas
 
         private void btnEliminarProducto_Click(object sender, EventArgs e)
         {
+            try
+            {
+                SQLServerClass sqlclass = new SQLServerClass();
 
+                List<string> productoIDs = new List<string>();
+                List<string> cantidades = new List<string>();
+
+                DataTable ventasDetalleData = sqlclass.ObtenerDatosVentasDetalle();
+
+                foreach (DataRow row in ventasDetalleData.Rows)
+                {
+                    productoIDs.Add(row["ProductoID"].ToString());
+                    cantidades.Add(row["Cantidad"].ToString());
+                }
+
+                sqlclass.DeleteProducto(productoIDs, cantidades);
+
+                MessageBox.Show("Transacción deshecha exitosamente.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                string folioSugerido = sqlclass.FolioSugerido();
+                txtFolio.Text = folioSugerido;
+                
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
