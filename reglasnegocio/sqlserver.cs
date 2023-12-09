@@ -161,6 +161,83 @@ namespace reglasnegocio
                 }
             }
 
+
+            public void InsertarInventario(string Folio, string Fecha, string Total, List<string> productoIDs, List<string> pVentas, List<string> cantidades)
+            {
+                bool bAllok = false;
+
+                try
+                {
+                    string sConexionDB = ConexionEstatica();
+
+                    using (SqlConnection conn = new SqlConnection(sConexionDB))
+                    {
+                        conn.Open();
+
+                        SqlTransaction sqlTransaction = conn.BeginTransaction();
+
+                        try
+                        {
+                            using (SqlCommand cmd = conn.CreateCommand())
+                            {
+
+                                cmd.Transaction = sqlTransaction;
+                                DateTime fechaTransaccion = DateTime.Parse(Fecha);
+
+                                cmd.CommandText = "INSERT INTO Ventas(Folio, Fecha, Total) VALUES (@Folio, @Fecha, @Total)";
+                                cmd.Parameters.AddWithValue("@Folio", Folio);
+                                cmd.Parameters.AddWithValue("@Fecha", fechaTransaccion);
+                                cmd.Parameters.AddWithValue("@Total", Total);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            for (int i = 0; i < productoIDs.Count; i++)
+                            {
+                                using (SqlCommand VD = conn.CreateCommand())
+                                {
+                                    VD.Transaction = sqlTransaction;
+
+                                    VD.CommandText = "INSERT INTO VentasDetalle (Cantidad, Pventa, ProductoID, Folio) VALUES (@Cantidad, @Pventa, @ProductoID, @Folio)";
+                                    VD.Parameters.AddWithValue("@Cantidad", cantidades[i]);
+                                    VD.Parameters.AddWithValue("@Pventa", pVentas[i]);
+                                    VD.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
+                                    VD.Parameters.AddWithValue("@Folio", Folio);
+                                    VD.ExecuteNonQuery();
+                                }
+
+                                using (SqlCommand UPSaldo = conn.CreateCommand())
+                                {
+                                    UPSaldo.Transaction = sqlTransaction;
+
+                                    UPSaldo.CommandText = "UPDATE Productos SET Saldo = Saldo - @Cantidad WHERE ProductoID = @ProductoID";
+                                    UPSaldo.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
+                                    UPSaldo.Parameters.AddWithValue("@Cantidad", cantidades[i]);
+                                    UPSaldo.ExecuteNonQuery();
+                                }
+                            }
+
+                            sqlTransaction.Commit();
+                            bAllok = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            sqlTransaction.Rollback();
+                            throw new Exception("Ocurrió un error durante la transacción en la base de datos.", ex);
+                        }
+                        finally
+                        {
+                            sqlTransaction.Dispose();
+                            conn.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    sLastError = ex.Message;
+                    bAllok = false;
+                }
+            }
+
             public bool InsertarProductos(string ProductoID, string Descripcion, string PrecioVenta, string saldo)
             {
                 try
