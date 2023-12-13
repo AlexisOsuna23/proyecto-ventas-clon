@@ -238,7 +238,6 @@ namespace reglasnegocio
                     sLastError = ex.Message;
                     bAllok = false;
                 }
-
             }
 
             public bool InsertarProductos(string ProductoID, string Descripcion, string PrecioVenta, string saldo)
