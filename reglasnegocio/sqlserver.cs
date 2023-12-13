@@ -180,11 +180,11 @@ namespace reglasnegocio
                         {
                             using (SqlCommand cmd = conn.CreateCommand())
                             {
-
                                 cmd.Transaction = sqlTransaction;
                                 DateTime fechaTransaccion = DateTime.Parse(Fecha);
 
-                                cmd.CommandText = "INSERT INTO Ventas(Folio, Fecha, Total) VALUES (@Folio, @Fecha, @Total)";
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.CommandText = "sp_InsertarVenta";
                                 cmd.Parameters.AddWithValue("@Folio", Folio);
                                 cmd.Parameters.AddWithValue("@Fecha", fechaTransaccion);
                                 cmd.Parameters.AddWithValue("@Total", Total);
@@ -197,7 +197,8 @@ namespace reglasnegocio
                                 {
                                     VD.Transaction = sqlTransaction;
 
-                                    VD.CommandText = "INSERT INTO InventarioDetalle (Cantidad, Pventa, ProductoID, Folio) VALUES (@Cantidad, @Pventa, @ProductoID, @Folio)";
+                                    VD.CommandType = CommandType.StoredProcedure;
+                                    VD.CommandText = "sp_InsertarInventarioDetalle";
                                     VD.Parameters.AddWithValue("@Cantidad", cantidades[i]);
                                     VD.Parameters.AddWithValue("@Pventa", pVentas[i]);
                                     VD.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
@@ -209,7 +210,8 @@ namespace reglasnegocio
                                 {
                                     UPSaldo.Transaction = sqlTransaction;
 
-                                    UPSaldo.CommandText = "UPDATE Productos SET Saldo = Saldo - @Cantidad WHERE ProductoID = @ProductoID";
+                                    UPSaldo.CommandType = CommandType.StoredProcedure;
+                                    UPSaldo.CommandText = "sp_ActualizarSaldoProducto";
                                     UPSaldo.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
                                     UPSaldo.Parameters.AddWithValue("@Cantidad", cantidades[i]);
                                     UPSaldo.ExecuteNonQuery();
@@ -236,6 +238,7 @@ namespace reglasnegocio
                     sLastError = ex.Message;
                     bAllok = false;
                 }
+
             }
 
             public bool InsertarProductos(string ProductoID, string Descripcion, string PrecioVenta, string saldo)
