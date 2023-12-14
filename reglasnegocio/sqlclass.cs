@@ -198,7 +198,7 @@ namespace reglasnegocio
 
             }
 
-        public void DisminuirStock(string productoID, string cantidad)
+            public void DisminuirStock(string productoID, string cantidad)
             {
           
                 try

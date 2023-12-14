@@ -33,8 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="reglasnegocio, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="reglasnegocio">
       <HintPath>..\reglasnegocio\bin\Debug\reglasnegocio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
