@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using reglasnegocio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static reglasnegocio.sqlserver;
+using static reglasnegocio.SQLServerClass;
 
 namespace proyecto_ventas
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using reglasnegocio;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static reglasnegocio.sqlserver;
+using static reglasnegocio.SQLServerClass;
 
 namespace proyecto_ventas
 {
@@ -439,20 +440,12 @@ namespace proyecto_ventas
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F1 && !formSecundarioAbierto) // Verifica si la tecla presionada es F1 y el formulario secundario no está abierto
-            {
-                formSecundarioAbierto = true; // Marcar que el formulario secundario está abierto
-                ventasdetalle formSecundario = new ventasdetalle();
-                formSecundario.FormClosed += (s, args) => formSecundarioAbierto = false; // Evento para cuando se cierre el formulario secundario
-                formSecundario.Show(); // Muestra el formulario secundario
-            }
-            if (e.KeyCode == Keys.F2 && !formSecundarioAbierto)
-            {
-                formSecundarioAbierto = true; // Marcar que el formulario secundario está abierto
-                productos formSecundario = new productos();
-                formSecundario.FormClosed += (s, args) => formSecundarioAbierto = false; // Evento para cuando se cierre el formulario secundario
-                formSecundario.Show(); // Muestra el formulario secundario
-            }
+           
+        }
+
+        private void txtfecha_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -71,6 +71,8 @@
             this.txtProducto.Name = "txtProducto";
             this.txtProducto.Size = new System.Drawing.Size(100, 20);
             this.txtProducto.TabIndex = 3;
+            this.txtProducto.TextChanged += new System.EventHandler(this.txtProducto_TextChanged);
+            this.txtProducto.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtProducto_KeyDown);
             // 
             // label2
             // 
@@ -110,6 +112,7 @@
             this.txtFecha.Name = "txtFecha";
             this.txtFecha.Size = new System.Drawing.Size(100, 20);
             this.txtFecha.TabIndex = 8;
+            this.txtFecha.TextChanged += new System.EventHandler(this.txtFecha_TextChanged);
             // 
             // label4
             // 
@@ -225,6 +228,8 @@
             this.Controls.Add(this.label1);
             this.Name = "dlgprincipal";
             this.Text = "dlgprincipal";
+            this.Load += new System.EventHandler(this.dlgprincipal_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dlgprincipal_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMostrarDatos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

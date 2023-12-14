@@ -189,6 +189,7 @@
             this.txtfecha.Name = "txtfecha";
             this.txtfecha.Size = new System.Drawing.Size(140, 20);
             this.txtfecha.TabIndex = 30;
+            this.txtfecha.TextChanged += new System.EventHandler(this.txtfecha_TextChanged);
             // 
             // label1
             // 

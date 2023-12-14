@@ -1,4 +1,5 @@
-﻿using System;
+﻿using reglasnegocio;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,30 +9,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static reglasnegocio.sqlserver;
+using static reglasnegocio.SQLServerClass;
 
 namespace proyecto_ventas
 {
     public partial class dlgprincipal : Form
     {
-
-        private SQLServerClass Sqlclass;
-        private string Produ = "Productos";
-        private DataTable registros;
-
+        
         private SQLServerClass sqlclass;
+        
+        private bool formSecundarioAbierto = false;
+
 
         public dlgprincipal()
         {
             InitializeComponent();
-            this.Sqlclass = new SQLServerClass();
+            this.sqlclass = new SQLServerClass();
         }
 
       
 
         private void btnGuardarProducto_Click(object sender, EventArgs e)
         {
-
             try
             {
                 string Folio = txtFolio.Text;
@@ -89,8 +88,8 @@ namespace proyecto_ventas
                     cantidades.Add(row["Cantidad"].ToString());
                 }
 
-                sqlclass.DeleteProducto(productoIDs, cantidades);
-
+                //sqlclass.DeleteProducto(productoIDs, cantidades);
+                sqlclass.DeshacerTransaccion(productoIDs, cantidades);
                 MessageBox.Show("Transacción deshecha exitosamente.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 string folioSugerido = sqlclass.FolioSugerido();
@@ -112,6 +111,66 @@ namespace proyecto_ventas
         private void dataGridViewMostrarDatos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void txtFecha_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dlgprincipal_Load(object sender, EventArgs e)
+        {
+            Fecha();
+
+            try
+            {
+                Fecha();
+
+                string folioSugerido = sqlclass.FolioSugerido();
+                txtFolio.Text = folioSugerido;
+                txtProducto.TextChanged += txtProducto_TextChanged;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener el folio sugerido: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+        private void Fecha()
+        {
+            var Fecha = DateTime.Now;
+            txtFecha.Text = Fecha.ToShortDateString();
+        }
+
+        private void txtProducto_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dlgprincipal_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F1 && !formSecundarioAbierto) // Verifica si la tecla presionada es F1 y el formulario secundario no está abierto
+            {
+                formSecundarioAbierto = true; // Marcar que el formulario secundario está abierto
+                productos formSecundario = new productos();
+                formSecundario.FormClosed += (s, args) => formSecundarioAbierto = false; // Evento para cuando se cierre el formulario secundario
+                formSecundario.Show(); // Muestra el formulario secundario
+            }
+            if (e.KeyCode == Keys.F2 && !formSecundarioAbierto)
+            {
+                formSecundarioAbierto = true; // Marcar que el formulario secundario está abierto
+                ventasdetalle formSecundario = new ventasdetalle();
+                formSecundario.FormClosed += (s, args) => formSecundarioAbierto = false; // Evento para cuando se cierre el formulario secundario
+                formSecundario.Show(); // Muestra el formulario secundario
+            }
+        }
+
+        private void txtProducto_KeyDown(object sender, KeyEventArgs e)
+        {
+            
         }
     }
 }
