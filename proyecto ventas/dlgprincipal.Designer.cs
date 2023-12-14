@@ -67,7 +67,7 @@
             // 
             // txtProducto
             // 
-            this.txtProducto.Location = new System.Drawing.Point(59, 56);
+            this.txtProducto.Location = new System.Drawing.Point(69, 55);
             this.txtProducto.Name = "txtProducto";
             this.txtProducto.Size = new System.Drawing.Size(100, 20);
             this.txtProducto.TabIndex = 3;
@@ -79,9 +79,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 58);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 13);
+            this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Producto";
+            this.label2.Text = "ProductoID";
             // 
             // txtCantidad
             // 

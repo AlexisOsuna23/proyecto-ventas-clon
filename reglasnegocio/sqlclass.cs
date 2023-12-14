@@ -134,6 +134,99 @@ namespace reglasnegocio
                 return dataTable;
             }
 
+            public void AumentarStock(string productoID, string cantidad)
+            {
+                //try
+                //{
+                //    string sConexionDB = ConexionEstatica(); // Obtener la cadena de conexión a la base de datos
+
+                //    using (SqlConnection conn = new SqlConnection(sConexionDB))
+                //    {
+                //        conn.Open();
+
+                //        // Consulta SQL para aumentar el stock del producto
+                //        string query = "UPDATE Productos SET Saldo = Saldo + @Cantidad WHERE ProductoID = @ProductoID";
+
+                //        using (SqlCommand cmd = new SqlCommand(query, conn))
+                //        {
+                //            // Agregar parámetros a la consulta SQL
+                //            cmd.Parameters.AddWithValue("@Cantidad", int.Parse(cantidad)); // Asegúrate de convertir el valor adecuadamente
+                //            cmd.Parameters.AddWithValue("@ProductoID", productoID);
+
+                //            // Ejecutar la consulta SQL
+                //            cmd.ExecuteNonQuery();
+                //        }
+
+                //        conn.Close();
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new Exception("Error al aumentar el stock del producto: " + ex.Message);
+                //}
+
+                try
+                {
+                    string sConexionDB = ConexionEstatica(); // Obtener la cadena de conexión a la base de datos
+
+                    using (SqlConnection conn = new SqlConnection(sConexionDB))
+                    {
+                        conn.Open();
+
+                        // Nombre del procedimiento almacenado
+                        string storedProcedure = "AumentarStock";
+
+                        using (SqlCommand cmd = new SqlCommand(storedProcedure, conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure; // Establecer el tipo de comando como un procedimiento almacenado
+
+                            // Agregar parámetros al procedimiento almacenado
+                            cmd.Parameters.AddWithValue("@Cantidad", int.Parse(cantidad)); // Asegúrate de convertir el valor adecuadamente
+                            cmd.Parameters.AddWithValue("@ProductoID", productoID);
+
+                            // Ejecutar el procedimiento almacenado
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        conn.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al aumentar el stock del producto: " + ex.Message);
+                }
+
+            }
+
+        public void DisminuirStock(string productoID, string cantidad)
+            {
+          
+                try
+                {
+                    string connectionString = ConexionEstatica(); // Obtén tu cadena de conexión aquí
+
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlCommand command = new SqlCommand("DisminuirStock", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+
+                            command.Parameters.AddWithValue("@ProductoID", productoID);
+                            command.Parameters.AddWithValue("@Cantidad", cantidad);
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al disminuir el stock.", ex);
+                }
+
+            }
+
             public string FolioSugerido()
             {
                 try
@@ -203,15 +296,16 @@ namespace reglasnegocio
                                     VD.ExecuteNonQuery();
                                 }
 
-                                using (SqlCommand UPSaldo = conn.CreateCommand())
+                                // Aquí necesitas un procedimiento almacenado que aumente el inventario basado en la cantidad vendida
+                                using (SqlCommand incrementarInventario = conn.CreateCommand())
                                 {
-                                    UPSaldo.Transaction = sqlTransaction;
+                                    incrementarInventario.Transaction = sqlTransaction;
 
-                                    UPSaldo.CommandType = CommandType.StoredProcedure;
-                                    UPSaldo.CommandText = "ActualizarSaldoProducto";
-                                    UPSaldo.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
-                                    UPSaldo.Parameters.AddWithValue("@Cantidad", cantidades[i]);
-                                    UPSaldo.ExecuteNonQuery();
+                                    incrementarInventario.CommandType = CommandType.StoredProcedure;
+                                    incrementarInventario.CommandText = "AumentarInventario";
+                                    incrementarInventario.Parameters.AddWithValue("@ProductoID", productoIDs[i]);
+                                    incrementarInventario.Parameters.AddWithValue("@Cantidad", cantidades[i]); // Cantidad vendida
+                                    incrementarInventario.ExecuteNonQuery();
                                 }
                             }
 
@@ -239,32 +333,6 @@ namespace reglasnegocio
 
             public bool InsertarProductos(string ProductoID, string Descripcion, string PrecioVenta, string saldo)
             {
-                //try
-                //{
-                //    string sConexionDB = ConexionEstatica();
-
-                //    using (SqlConnection conn = new SqlConnection(sConexionDB))
-                //    {
-                //        conn.Open();
-
-                //        string insertQuery = $"INSERT INTO Productos(ProductoID, Descripcion, Pventa, Saldo) " +
-                //                            $"VALUES ('{ProductoID}', '{Descripcion}', '{PrecioVenta}', '{saldo}')";
-
-
-                //        SqlCommand command = new SqlCommand(insertQuery, conn);
-                //        command.ExecuteNonQuery();
-
-                //        conn.Close();
-                //    }
-
-                //    return true;
-                //}
-                //catch (Exception ex)
-                //{
-                //    sLastError = ex.Message;
-                //    return false;
-                //}
-
                 try
                 {
                     string sConexionDB = ConexionEstatica();
@@ -560,72 +628,6 @@ namespace reglasnegocio
             }
             public void DeshacerTransaccion(List<string> productoIDs, List<string> cantidades)
             {
-                //try
-                //{
-                //    string sConexionDB = ConexionEstatica();
-
-                //    using (SqlConnection conn = new SqlConnection(sConexionDB))
-                //    {
-                //        conn.Open();
-
-                //        SqlTransaction sqlTransaction = conn.BeginTransaction();
-
-                //        try
-                //        {
-                //            Tuple<string, string, string> ultimaInfo = ObtenerUltimoFolioInfo(conn, sqlTransaction);
-                //            string ultimoFolio = ultimaInfo.Item1;
-
-                //            List<Tuple<string, string, string>> registros = ObtenerRegistrosPorFolio(conn, sqlTransaction, ultimoFolio);
-
-                //            using (SqlCommand cmdDetalle = conn.CreateCommand())
-                //            {
-                //                cmdDetalle.Transaction = sqlTransaction;
-
-                //                cmdDetalle.CommandText = "DELETE FROM VentasDetalle WHERE Folio = @Folio";
-                //                cmdDetalle.Parameters.AddWithValue("@Folio", ultimoFolio);
-                //                cmdDetalle.ExecuteNonQuery();
-                //            }
-
-                //            using (SqlCommand cmdVentas = conn.CreateCommand())
-                //            {
-                //                cmdVentas.Transaction = sqlTransaction;
-
-                //                cmdVentas.CommandText = "DELETE FROM Ventas WHERE Folio = @Folio";
-                //                cmdVentas.Parameters.AddWithValue("@Folio", ultimoFolio);
-                //                cmdVentas.ExecuteNonQuery();
-                //            }
-
-                //            for (int i = 0; i < registros.Count; i++)
-                //            {
-                //                using (SqlCommand UPSaldo = conn.CreateCommand())
-                //                {
-                //                    UPSaldo.Transaction = sqlTransaction;
-
-                //                    UPSaldo.CommandText = "UPDATE Productos SET Saldo = Saldo + @Cantidad WHERE ProductoID = @ProductoID";
-                //                    UPSaldo.Parameters.AddWithValue("@ProductoID", registros[i].Item2);
-                //                    UPSaldo.Parameters.AddWithValue("@Cantidad", registros[i].Item3);
-                //                    UPSaldo.ExecuteNonQuery();
-                //                }
-                //            }
-
-                //            sqlTransaction.Commit();
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            sqlTransaction.Rollback();
-                //            throw new Exception("Ocurrió un error al deshacer la transacción en la base de datos.", ex);
-                //        }
-                //        finally
-                //        {
-                //            sqlTransaction.Dispose();
-                //            conn.Close();
-                //        }
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    sLastError = ex.Message;
-                //}
 
                 try
                 {
@@ -668,16 +670,16 @@ namespace reglasnegocio
 
                             for (int i = 0; i < registros.Count; i++)
                             {
-                                using (SqlCommand UPSaldo = conn.CreateCommand())
+                                using (SqlCommand DecrementarStock = conn.CreateCommand())
                                 {
-                                    UPSaldo.Transaction = sqlTransaction;
+                                    DecrementarStock.Transaction = sqlTransaction;
 
-                                    UPSaldo.CommandText = "ActualizarSaldoProducto"; // Reemplaza con el nombre de tu procedimiento almacenado para actualizar saldos de productos
-                                    UPSaldo.CommandType = CommandType.StoredProcedure;
+                                    DecrementarStock.CommandText = "DisminuirInventario"; // Reemplaza con el nombre de tu procedimiento almacenado para disminuir stock
+                                    DecrementarStock.CommandType = CommandType.StoredProcedure;
 
-                                    UPSaldo.Parameters.AddWithValue("@ProductoID", registros[i].Item2);
-                                    UPSaldo.Parameters.AddWithValue("@Cantidad", registros[i].Item3);
-                                    UPSaldo.ExecuteNonQuery();
+                                    DecrementarStock.Parameters.AddWithValue("@ProductoID", registros[i].Item2);
+                                    DecrementarStock.Parameters.AddWithValue("@Cantidad", registros[i].Item3);
+                                    DecrementarStock.ExecuteNonQuery();
                                 }
                             }
 
@@ -699,7 +701,6 @@ namespace reglasnegocio
                 {
                     sLastError = ex.Message;
                 }
-
             }
             private Tuple<string, string, string> ObtenerUltimoFolioInfo(SqlConnection conn, SqlTransaction transaction)
             {
@@ -768,7 +769,7 @@ namespace reglasnegocio
                     {
                         conn.Open();
 
-                        string SQLQuery = @"SELECT ProductoID, Cantidad, Folio FROM VentasDetalle";
+                        string SQLQuery = @"SELECT ProductoID, Cantidad, Folio FROM InventarioDetalle";
 
                         using (SqlDataAdapter DDA = new SqlDataAdapter(SQLQuery, conn))
                         {

@@ -35,7 +35,7 @@ namespace proyecto_ventas
             string PrecioVenta = txtPVentas.Text;
             string saldo = txtSaldo.Text;
 
-            bool resultado = sqlclass.InsertarProductos(ProductId, Descripcion, PrecioVenta, saldo);
+            bool resultado = Sqlclass.InsertarProductos(ProductId, Descripcion, PrecioVenta, saldo);
 
             if (resultado)
             {
