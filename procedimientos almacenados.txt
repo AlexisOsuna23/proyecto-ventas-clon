@@ -1,0 +1,89 @@
+ALTER PROCEDURE [dbo].[AumentarStock]
+    @ProductoID VARCHAR(10),
+    @Cantidad FLOAT
+AS
+BEGIN
+    UPDATE Productos
+    SET Saldo = Saldo + @Cantidad
+    WHERE ProductoID = @ProductoID
+END
+-------------------------------------------
+ALTER PROCEDURE [dbo].[DisminuirStock]
+    @ProductoID VARCHAR(10),
+    @Cantidad FLOAT
+AS
+BEGIN
+    DECLARE @SaldoActual FLOAT
+
+    -- Obtener el saldo actual del producto
+    SELECT @SaldoActual = Saldo
+    FROM Productos
+    WHERE ProductoID = @ProductoID
+
+    -- Verificar si hay suficiente stock para la reducción
+    IF @SaldoActual >= @Cantidad
+    BEGIN
+        -- Actualizar el saldo restando la cantidad especificada
+        UPDATE Productos
+        SET Saldo = @SaldoActual - @Cantidad
+        WHERE ProductoID = @ProductoID
+    END
+  
+END
+
+------------------------
+ALTER PROCEDURE [dbo].[EliminarDetalleInventario]
+    @Renglon int
+AS
+BEGIN
+    DELETE FROM InventarioDetalle
+    WHERE Renglon = @Renglon
+END
+----------------------
+LTER PROCEDURE [dbo].[EliminarVenta]
+    @Folio int
+AS
+BEGIN
+    DELETE FROM Ventas
+    WHERE Folio = @Folio
+END
+---------------------
+ALTER PROCEDURE [dbo].[InsertarDetalleInventario]
+    @Cantidad float,
+    @Precio decimal,
+    @ProductoID varchar(10),
+    @Folio int
+AS
+BEGIN
+    INSERT INTO InventarioDetalle (Cantidad, Precio, ProductoID, Folio)
+    VALUES (@Cantidad, @Precio, @ProductoID, @Folio)
+END
+------------------------
+ALTER PROCEDURE [dbo].[InsertarProducto]
+    @ProductoID varchar(10),
+    @Descripcion varchar(50),
+    @PVenta decimal(10,2),
+    @Saldo float
+AS
+BEGIN
+    INSERT INTO Productos (ProductoID, Descripcion, PVenta, Saldo)
+    VALUES (@ProductoID, @Descripcion, @PVenta, @Saldo)
+END
+-----------------------
+ALTER PROCEDURE [dbo].[InsertarVenta]
+    @Folio int,
+    @Fecha datetime,
+    @Total money
+AS
+BEGIN
+    INSERT INTO Ventas (Folio, Fecha, Total)
+    VALUES (@Folio, @Fecha, @Total)
+END
+--------------------
+ALTER PROCEDURE [dbo].[sp_EliminarProducto]
+    @ProductoID varchar(10)
+AS
+BEGIN
+    DELETE FROM Productos
+    WHERE ProductoID = @ProductoID
+END
