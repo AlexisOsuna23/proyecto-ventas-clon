@@ -65,7 +65,7 @@ namespace proyecto_ventas
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show( "ocurrio un error al insertar el Registro"+ex.Message);
             }
 
 
